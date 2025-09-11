@@ -1,9 +1,10 @@
 """
-Schema Optimizer
-================
+RAN Schema Optimizer
+====================
 
 Optimizes database schema for RAN performance data storage and querying.
-Handles data type optimization, index creation, and performance tuning.
+Handles data type optimization, index creation, and performance tuning
+specifically for 2G and 4G network performance metrics.
 """
 
 import sqlite3
@@ -16,40 +17,51 @@ import logging
 class SchemaOptimizer:
     """
     Optimizes database schema for efficient storage and querying of RAN data.
+    Provides technology-specific optimizations for 2G and 4G data.
     """
     
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         
-        # Define optimal data types for RAN data
-        self.ran_type_mapping = {
-            'cell_id': 'TEXT',
-            'site_id': 'TEXT', 
-            'sector_id': 'INTEGER',
-            'enb_id': 'INTEGER',
-            'gnb_id': 'INTEGER',
-            'rsrp': 'REAL',
-            'rsrq': 'REAL',
-            'sinr': 'REAL',
-            'throughput': 'REAL',
-            'latency': 'REAL',
-            'bler': 'REAL',
-            'cqi': 'INTEGER',
-            'timestamp': 'DATETIME',
-            'date': 'DATE'
+        # Define optimal data types for common RAN columns
+        self.common_type_mapping = {
+            'id': 'INTEGER',
+            'region': 'TEXT',
+            'kabupaten': 'TEXT',
+            'siteid': 'TEXT',
+            'eniqhost': 'TEXT',
+            'last_update': 'TIMESTAMP'
+        }
+        
+        # RAN 2G specific optimizations
+        self.ran_2g_optimizations = {
+            'integer_columns': ['ccalls', 'ccongs', 'cndrop', 'cnrelcong', 'pmcount_2g'],
+            'float_columns': ['tavaacc', 'tavascan'],
+            'bigint_columns': ['cs12dlack', 'cs12ulack', 'cs14dlack', 'mc19dlack', 'mc19ulack'],
+            'count_columns': ['numtchoffps', 'numtchoffsdcch', 'numtrxoffps']
+        }
+        
+        # RAN 4G specific optimizations
+        self.ran_4g_optimizations = {
+            'integer_columns': ['pm_count', 'pmcelldowntimeauto', 'pmcelldowntimeman'],
+            'float_columns': ['pm_rrcconnuser'],
+            'bigint_columns': ['pmpdcpvoldldrb', 'pmpdcpvoldldrblasttti', 'pmpdcpvoluldrb',
+                             'pmprbavaildl', 'pmprbavailul', 'pmprbuseddldtch', 'pmprbuseduldtch'],
+            'count_columns': ['pmerabestabattadded', 'pmerabestabattinit', 'pmrrcconnestabatt']
         }
         
         # Define columns that should be indexed for performance
         self.index_columns = [
-            'cell_id', 'site_id', 'timestamp', 'date', 'hour'
+            'region', 'kabupaten', 'siteid', 'eniqhost', 'last_update'
         ]
     
-    def optimize_dataframe(self, df: pd.DataFrame) -> pd.DataFrame:
+    def optimize_ran_dataframe(self, df: pd.DataFrame, ran_tech: str) -> pd.DataFrame:
         """
-        Optimize DataFrame data types for efficient storage.
+        Optimize DataFrame data types for efficient storage based on RAN technology.
         
         Args:
             df: Input DataFrame
+            ran_tech: RAN technology (2G or 4G)
             
         Returns:
             pd.DataFrame: Optimized DataFrame
@@ -57,36 +69,142 @@ class SchemaOptimizer:
         try:
             optimized_df = df.copy()
             
-            for col in df.columns:
-                col_lower = col.lower()
-                
-                # Optimize integer columns
-                if df[col].dtype in ['int64', 'int32']:
-                    optimized_df[col] = self._optimize_integer_column(df[col])
-                
-                # Optimize float columns  
-                elif df[col].dtype in ['float64', 'float32']:
-                    optimized_df[col] = self._optimize_float_column(df[col])
-                
-                # Optimize string columns
-                elif df[col].dtype == 'object':
-                    optimized_df[col] = self._optimize_string_column(df[col], col_lower)
-                
-                # Handle datetime columns
-                if any(pattern in col_lower for pattern in ['timestamp', 'date', 'time']):
-                    optimized_df[col] = self._optimize_datetime_column(df[col])
+            # Apply common optimizations first
+            optimized_df = self._apply_common_optimizations(optimized_df)
             
-            self.logger.info("DataFrame optimization completed")
+            # Apply technology-specific optimizations
+            if ran_tech == "2G":
+                optimized_df = self._apply_2g_optimizations(optimized_df)
+            elif ran_tech == "4G":
+                optimized_df = self._apply_4g_optimizations(optimized_df)
+            
+            # Apply general column optimizations
+            for col in df.columns:
+                if col not in self.common_type_mapping:
+                    optimized_df[col] = self._optimize_column_by_content(df[col], col)
+            
+            # Memory usage comparison
+            original_memory = df.memory_usage(deep=True).sum() / 1024 / 1024
+            optimized_memory = optimized_df.memory_usage(deep=True).sum() / 1024 / 1024
+            
+            self.logger.info(f"DataFrame optimization completed: {original_memory:.1f}MB -> {optimized_memory:.1f}MB "
+                           f"({(original_memory - optimized_memory) / original_memory * 100:.1f}% reduction)")
+            
             return optimized_df
             
         except Exception as e:
             self.logger.error(f"DataFrame optimization failed: {e}")
             return df
     
-    def _optimize_integer_column(self, series: pd.Series) -> pd.Series:
+    def _apply_common_optimizations(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Apply optimizations for common RAN columns."""
+        for col, dtype in self.common_type_mapping.items():
+            if col in df.columns:
+                if dtype == 'INTEGER':
+                    df[col] = pd.to_numeric(df[col], errors='coerce', downcast='integer')
+                elif dtype == 'TEXT':
+                    df[col] = df[col].astype('string')
+                elif dtype == 'TIMESTAMP':
+                    df[col] = pd.to_datetime(df[col], errors='coerce')
+        
+        return df
+    
+    def _apply_2g_optimizations(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Apply 2G-specific optimizations."""
+        optimizations = self.ran_2g_optimizations
+        
+        # Integer columns (small values)
+        for col in optimizations['integer_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce', downcast='integer')
+        
+        # Float columns (percentage/ratio values)
+        for col in optimizations['float_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce', downcast='float')
+        
+        # Big integer columns (counters, volumes)
+        for col in optimizations['bigint_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+        
+        # Count columns (non-negative integers)
+        for col in optimizations['count_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce', downcast='unsigned')
+        
+        return df
+    
+    def _apply_4g_optimizations(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Apply 4G-specific optimizations."""
+        optimizations = self.ran_4g_optimizations
+        
+        # Integer columns (small values)
+        for col in optimizations['integer_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce', downcast='integer')
+        
+        # Float columns (averages, ratios)
+        for col in optimizations['float_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce', downcast='float')
+        
+        # Big integer columns (volumes, byte counts)
+        for col in optimizations['bigint_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+        
+        # Count columns (attempts, successes)
+        for col in optimizations['count_columns']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce', downcast='unsigned')
+        
+        return df
+    
+    def _optimize_column_by_content(self, series: pd.Series, col_name: str) -> pd.Series:
         """
-        Optimize integer column to smallest possible integer type.
+        Optimize column based on its content and naming pattern.
+        
+        Args:
+            series: Pandas series to optimize
+            col_name: Column name for pattern matching
+            
+        Returns:
+            pd.Series: Optimized series
         """
+        col_lower = col_name.lower()
+        
+        # Numeric optimization
+        if pd.api.types.is_numeric_dtype(series):
+            # Check if it's a counter/attempt/success metric
+            if any(pattern in col_lower for pattern in ['count', 'att', 'succ', 'drop', 'fail']):
+                return pd.to_numeric(series, errors='coerce', downcast='unsigned')
+            
+            # Check if it's a percentage/ratio
+            elif any(pattern in col_lower for pattern in ['rate', 'ratio', 'percent', 'bler']):
+                return pd.to_numeric(series, errors='coerce', downcast='float')
+            
+            # Check if it's a volume/throughput metric
+            elif any(pattern in col_lower for pattern in ['vol', 'byte', 'bit', 'throughput']):
+                return pd.to_numeric(series, errors='coerce')  # Keep as int64/float64 for large values
+            
+            # Default numeric optimization
+            else:
+                if series.dtype in ['int64', 'int32']:
+                    return pd.to_numeric(series, errors='coerce', downcast='integer')
+                else:
+                    return pd.to_numeric(series, errors='coerce', downcast='float')
+        
+        # String optimization
+        elif series.dtype == 'object':
+            # Check if it looks like categorical data
+            unique_ratio = series.nunique() / len(series)
+            if unique_ratio < 0.1:  # Less than 10% unique values
+                return series.astype('category')
+            else:
+                return series.astype('string')
+        
+        return series
         min_val = series.min()
         max_val = series.max()
         

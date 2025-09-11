@@ -16,8 +16,9 @@ Main Modules:
 __version__ = "1.0.0"
 __author__ = "RAN SQL Team"
 
-from .import_module import CSVImporter
-from .database_structure_module import DatabaseAnalyzer
-from .name_entity_recognition_training_module import NERTrainer
-from .sql_model_generation_module import SQLModelTrainer
-from .question_answering_module import QuestionAnsweringSystem
+# Commented out to avoid dependency issues during development
+# from .import_module import RANCSVImporter
+# from .database_structure_module import DatabaseAnalyzer
+# from .name_entity_recognition_training_module import NERTrainer
+# from .sql_model_generation_module import SQLModelTrainer
+# from .question_answering_module import QuestionAnsweringSystem
