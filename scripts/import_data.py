@@ -14,7 +14,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.import_module import CSVImporter
+from src.import_module import RANCSVImporter
 from config.settings import get_config
 import logging
 
@@ -44,7 +44,7 @@ def import_csv_file(csv_path: str, table_name: str = None):
     config.create_directories()
     
     # Initialize importer
-    importer = CSVImporter(str(config.DATABASE_PATH))
+    importer = RANCSVImporter(str(config.DATABASE_PATH))
     
     # Generate table name if not provided
     if not table_name:
@@ -53,7 +53,7 @@ def import_csv_file(csv_path: str, table_name: str = None):
     logger.info(f"Importing {csv_path} to table '{table_name}'")
     
     # Import the file
-    success = importer.import_csv(csv_path, table_name)
+    success = importer.import_ran_csv(csv_path, table_name)
     
     if success:
         logger.info(f"✅ Successfully imported {csv_path}")
@@ -76,27 +76,22 @@ def import_directory(directory_path: str):
         directory_path: Path to directory containing CSV files
     """
     logger = setup_logging()
-    directory = Path(directory_path)
+    config = get_config()
     
-    if not directory.exists():
-        logger.error(f"Directory does not exist: {directory_path}")
-        return False
+    # Ensure database directory exists
+    config.create_directories()
     
-    csv_files = list(directory.glob("*.csv"))
+    # Initialize importer
+    importer = RANCSVImporter(str(config.DATABASE_PATH))
     
-    if not csv_files:
-        logger.warning(f"No CSV files found in {directory_path}")
-        return True
+    # Import all RAN files from directory
+    results = importer.import_all_ran_files(directory_path)
     
-    logger.info(f"Found {len(csv_files)} CSV files to import")
+    success_count = sum(1 for success in results.values() if success)
+    total_files = len(results)
     
-    success_count = 0
-    for csv_file in csv_files:
-        if import_csv_file(str(csv_file)):
-            success_count += 1
-    
-    logger.info(f"Successfully imported {success_count}/{len(csv_files)} files")
-    return success_count == len(csv_files)
+    logger.info(f"Successfully imported {success_count}/{total_files} files")
+    return success_count == total_files
 
 
 def list_tables():
@@ -108,7 +103,7 @@ def list_tables():
         logger.warning("Database does not exist yet")
         return
     
-    importer = CSVImporter(str(config.DATABASE_PATH))
+    importer = RANCSVImporter(str(config.DATABASE_PATH))
     tables = importer.list_tables()
     
     if tables:
@@ -124,6 +119,7 @@ def main():
     parser = argparse.ArgumentParser(description="Import CSV data into SQLite database")
     parser.add_argument("--file", "-f", help="CSV file to import")
     parser.add_argument("--directory", "-d", help="Directory containing CSV files")
+    parser.add_argument("--all", "-a", action="store_true", help="Import all RAN files from data/raw")
     parser.add_argument("--table", "-t", help="Table name (for single file import)")
     parser.add_argument("--list", "-l", action="store_true", help="List existing tables")
     
@@ -135,6 +131,9 @@ def main():
         import_csv_file(args.file, args.table)
     elif args.directory:
         import_directory(args.directory)
+    elif args.all:
+        config = get_config()
+        import_directory(str(config.RAW_DATA_DIR))
     else:
         # Default: import sample data
         config = get_config()
