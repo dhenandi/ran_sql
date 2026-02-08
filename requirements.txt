@@ -1,8 +1,7 @@
 # Core dependencies
 pandas>=1.5.0
 numpy>=1.21.0
-sqlite3  # Built-in with Python
-pathlib  # Built-in with Python
+# sqlite3 and pathlib are built-in with Python
 
 # NLP and ML dependencies
 spacy>=3.6.0

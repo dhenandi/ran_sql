@@ -20,21 +20,24 @@ class TrainingDataGenerator:
     Generates training data for NER and SQL generation models.
     """
     
-    def __init__(self, schema_info: Dict, db_path: str):
+    def __init__(self, schema_info: Dict, db_path: str, kpi_analyzer=None):
         """
         Initialize the training data generator.
         
         Args:
             schema_info: Database schema information
             db_path: Path to the SQLite database
+            kpi_analyzer: Optional KPIAnalyzer instance for KPI-aware generation
         """
         self.schema_info = schema_info
         self.db_path = Path(db_path)
+        self.kpi_analyzer = kpi_analyzer
         self.logger = logging.getLogger(__name__)
         
         # Load RAN-specific templates and patterns
         self._load_query_templates()
         self._load_entity_patterns()
+        self._load_kpi_templates()
     
     def _load_query_templates(self):
         """
@@ -113,6 +116,36 @@ class TrainingDataGenerator:
             'AGGREGATION': [
                 r'\baverage\b', r'\bmean\b', r'\bmax\b', r'\bmaximum\b',
                 r'\bmin\b', r'\bminimum\b', r'\bcount\b', r'\bsum\b'
+            ]
+        }
+    
+    def _load_kpi_templates(self):
+        """
+        Load KPI-specific query templates if KPI analyzer is available.
+        """
+        if not self.kpi_analyzer:
+            return
+        
+        # Add KPI-specific templates
+        self.kpi_query_templates = {
+            'kpi_categorical': [
+                "What is the {kpi} for {tech} network?",
+                "Show me {kpi} statistics",
+                "Calculate {kpi} across all sites",
+                "Get {kpi} measurements for {region}",
+                "Display {kpi} by {category}"
+            ],
+            'kpi_comparison': [
+                "Compare {kpi} between 2G and 4G",
+                "Which technology has better {kpi}?",
+                "Show {kpi} differences across regions",
+                "{kpi} performance comparison"
+            ],
+            'kpi_threshold': [
+                "Find sites where {kpi} is below {threshold}",
+                "Show cells with {kpi} exceeding {threshold}",
+                "Alert when {kpi} drops below {threshold}",
+                "Identify poor {kpi} performance"
             ]
         }
     

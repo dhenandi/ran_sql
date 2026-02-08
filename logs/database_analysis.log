@@ -1,0 +1,6 @@
+2026-02-08 05:36:52,191 - src.database_structure_module.database_analyzer - INFO - Database analysis completed successfully
+2026-02-08 05:36:52,211 - src.database_structure_module.database_analyzer - INFO - Schema exported to /workspaces/ran_sql/data/processed/database_schema.json
+2026-02-08 05:36:52,217 - src.database_structure_module.kpi_analyzer - INFO - Loaded 29 KPI definitions
+2026-02-08 05:36:52,228 - src.database_structure_module.kpi_analyzer - INFO - KPI mappings exported to /workspaces/ran_sql/data/processed/kpi_mappings.json
+2026-02-08 05:36:52,254 - src.database_structure_module.training_data_generator - INFO - Generated 2000 NER training samples
+2026-02-08 05:36:52,347 - src.database_structure_module.training_data_generator - INFO - Generated 910 SQL training samples

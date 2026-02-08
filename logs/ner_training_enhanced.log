@@ -1,0 +1,66 @@
+2026-02-08 05:50:02,052 - INFO - Loaded 1500 training samples
+2026-02-08 05:50:02,055 - INFO - Converted 1500 samples to spaCy format
+2026-02-08 05:50:02,055 - INFO - Entity labels: DATE_TIME, KPI_NAME, LOCATION, NUMERIC_VALUE, REGION, SITE_ID
+2026-02-08 05:50:02,293 - INFO - Created vocabulary
+2026-02-08 05:50:02,293 - INFO - Finished initializing nlp object
+2026-02-08 05:50:02,391 - INFO - Starting training for 30 iterations...
+2026-02-08 05:52:03,086 - INFO - Loaded 1500 training samples
+2026-02-08 05:52:03,088 - INFO - Converted 1500 samples to spaCy format
+2026-02-08 05:52:03,089 - INFO - Entity labels: DATE_TIME, KPI_NAME, LOCATION, NUMERIC_VALUE, REGION, SITE_ID
+2026-02-08 05:52:03,298 - INFO - Created vocabulary
+2026-02-08 05:52:03,298 - INFO - Finished initializing nlp object
+2026-02-08 05:52:03,374 - INFO - Starting training for 30 iterations...
+2026-02-08 05:52:24,966 - INFO - Iteration 5/30 - Loss: 69.0028
+2026-02-08 05:52:46,523 - INFO - Iteration 10/30 - Loss: 59.3526
+2026-02-08 05:53:08,638 - INFO - Iteration 15/30 - Loss: 64.6490
+2026-02-08 05:53:29,656 - INFO - Iteration 20/30 - Loss: 57.7261
+2026-02-08 05:53:50,682 - INFO - Iteration 25/30 - Loss: 65.7921
+2026-02-08 05:54:11,833 - INFO - Iteration 30/30 - Loss: 53.9058
+2026-02-08 05:54:11,833 - INFO - Training completed!
+2026-02-08 05:54:12,330 - INFO - Evaluation Results:
+2026-02-08 05:54:12,330 - INFO -   Precision: 0.9963
+2026-02-08 05:54:12,330 - INFO -   Recall: 0.9872
+2026-02-08 05:54:12,330 - INFO -   F1-Score: 0.9917
+2026-02-08 05:54:12,370 - INFO - 
+================================================================================
+2026-02-08 05:54:12,370 - INFO - Testing Model with Sample Queries
+2026-02-08 05:54:12,370 - INFO - ================================================================================
+2026-02-08 05:54:12,373 - INFO - 
+Query: What is the average pmcelldowntimeauto in Sumbagteng region?
+2026-02-08 05:54:12,373 - INFO -   Detected Entities:
+2026-02-08 05:54:12,373 - INFO -     - pmcelldowntimeauto        → KPI_NAME
+2026-02-08 05:54:12,373 - INFO -     - Sumbagteng                → REGION
+2026-02-08 05:54:12,375 - INFO - 
+Query: Show me ccalls values for site BTM680
+2026-02-08 05:54:12,375 - INFO -   Detected Entities:
+2026-02-08 05:54:12,376 - INFO -     - ccalls                    → KPI_NAME
+2026-02-08 05:54:12,376 - INFO -     - BTM680                    → SITE_ID
+2026-02-08 05:54:12,378 - INFO - 
+Query: Get maximum pmrrcconnlevsamp from all cells
+2026-02-08 05:54:12,378 - INFO -   Detected Entities:
+2026-02-08 05:54:12,379 - INFO -     - pmrrcconnlevsamp          → KPI_NAME
+2026-02-08 05:54:12,381 - INFO - 
+Query: Calculate cndrop for 2G network in Kalimantan
+2026-02-08 05:54:12,381 - INFO -   Detected Entities:
+2026-02-08 05:54:12,381 - INFO -     - cndrop                    → KPI_NAME
+2026-02-08 05:54:12,381 - INFO -     - Kalimantan                → REGION
+2026-02-08 05:54:12,383 - INFO - 
+Query: Display pmconsumedenergy by region
+2026-02-08 05:54:12,384 - INFO -   Detected Entities:
+2026-02-08 05:54:12,384 - INFO -     - pmconsumedenergy          → KPI_NAME
+2026-02-08 05:54:12,386 - INFO - 
+Query: Find sites where pmhoexeattlteintraf is above 100
+2026-02-08 05:54:12,386 - INFO -   Detected Entities:
+2026-02-08 05:54:12,386 - INFO -     - pmhoexeattlteintraf       → KPI_NAME
+2026-02-08 05:54:12,386 - INFO -     - 100                       → NUMERIC_VALUE
+2026-02-08 05:54:12,389 - INFO - 
+Query: Show cells with tava below 50 in KOTA BATAM
+2026-02-08 05:54:12,389 - INFO -   Detected Entities:
+2026-02-08 05:54:12,389 - INFO -     - tava                      → KPI_NAME
+2026-02-08 05:54:12,389 - INFO -     - 50                        → NUMERIC_VALUE
+2026-02-08 05:54:12,389 - INFO -     - KOTA BATAM                → LOCATION
+2026-02-08 05:54:12,391 - INFO - 
+Query: What was the pmcellsleeptime yesterday?
+2026-02-08 05:54:12,391 - INFO -   Detected Entities:
+2026-02-08 05:54:12,391 - INFO -     - pmcellsleeptime           → KPI_NAME
+2026-02-08 05:54:12,391 - INFO -     - yesterday                 → DATE_TIME

@@ -1,0 +1,42 @@
+2026-02-08 05:47:40,358 - INFO - Loaded 2000 training samples
+2026-02-08 05:47:40,359 - INFO - Converted 229 samples to spaCy format
+2026-02-08 05:47:40,359 - INFO - Entity labels: DATE_TIME, NUMERIC_VALUE
+2026-02-08 05:47:40,359 - INFO - Training set: 183 samples
+2026-02-08 05:47:40,359 - INFO - Test set: 46 samples
+2026-02-08 05:47:40,594 - INFO - Created blank spaCy model with NER component
+2026-02-08 05:47:40,597 - INFO - Created vocabulary
+2026-02-08 05:47:40,597 - INFO - Finished initializing nlp object
+2026-02-08 05:47:40,684 - INFO - Starting training for 30 iterations...
+2026-02-08 05:47:44,825 - INFO - Iteration 5/30 - Loss: 0.2205
+2026-02-08 05:47:48,899 - INFO - Iteration 10/30 - Loss: 0.0000
+2026-02-08 05:47:53,106 - INFO - Iteration 15/30 - Loss: 0.6621
+2026-02-08 05:47:57,078 - INFO - Iteration 20/30 - Loss: 0.0000
+2026-02-08 05:48:01,322 - INFO - Iteration 25/30 - Loss: 0.0000
+2026-02-08 05:48:05,509 - INFO - Iteration 30/30 - Loss: 0.0000
+2026-02-08 05:48:05,509 - INFO - Training completed!
+2026-02-08 05:48:05,626 - INFO - Evaluation Results:
+2026-02-08 05:48:05,627 - INFO -   Precision: 1.0000
+2026-02-08 05:48:05,627 - INFO -   Recall: 1.0000
+2026-02-08 05:48:05,628 - INFO -   F1-Score: 1.0000
+2026-02-08 05:48:05,672 - INFO - Model saved to /workspaces/ran_sql/models/ner/ran_ner_model
+2026-02-08 05:48:05,673 - INFO - 
+================================================================================
+2026-02-08 05:48:05,673 - INFO - Testing Model with Sample Queries
+2026-02-08 05:48:05,673 - INFO - ================================================================================
+2026-02-08 05:48:05,676 - INFO - 
+Query: What is the average cell availability in Sumbagteng region?
+2026-02-08 05:48:05,677 - INFO -   Detected Entities:
+2026-02-08 05:48:05,677 - INFO -     - availability         → NUMERIC_VALUE
+2026-02-08 05:48:05,679 - INFO - 
+Query: Show me throughput values for site BTM680
+2026-02-08 05:48:05,680 - INFO -   No entities detected
+2026-02-08 05:48:05,682 - INFO - 
+Query: Get maximum RSRP from all cells
+2026-02-08 05:48:05,682 - INFO -   No entities detected
+2026-02-08 05:48:05,684 - INFO - 
+Query: Calculate drop rate for 2G network
+2026-02-08 05:48:05,684 - INFO -   No entities detected
+2026-02-08 05:48:05,686 - INFO - 
+Query: Display energy consumption by region
+2026-02-08 05:48:05,686 - INFO -   Detected Entities:
+2026-02-08 05:48:05,687 - INFO -     - Display energy       → DATE_TIME
