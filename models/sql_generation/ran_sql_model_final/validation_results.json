@@ -1,0 +1,162 @@
+{
+  "test_queries": [
+    {
+      "query": "What is the average RSRP in Jakarta?",
+      "entities": [
+        {
+          "text": "RSRP",
+          "label": "LOCATION",
+          "start": 20,
+          "end": 24
+        }
+      ],
+      "query_type": "aggregation_avg",
+      "sql": "SELECT AVG(<KPI_NAME>) FROM ran_2g_ran_2g;",
+      "status": "success",
+      "executable": false,
+      "error": "near \"<\": syntax error",
+      "error_type": "syntax"
+    },
+    {
+      "query": "Show me SINR values for site JKT001",
+      "entities": [
+        {
+          "text": "SINR",
+          "label": "LOCATION",
+          "start": 8,
+          "end": 12
+        },
+        {
+          "text": "JKT001",
+          "label": "SITE_ID",
+          "start": 29,
+          "end": 35
+        }
+      ],
+      "query_type": "selection",
+      "sql": "SELECT <KPI_NAME> FROM ran_2g_ran_2g WHERE id = 'JKT001';",
+      "status": "success",
+      "executable": false,
+      "error": "near \"<\": syntax error",
+      "error_type": "syntax"
+    },
+    {
+      "query": "Count the number of cells in Bandung",
+      "entities": [],
+      "query_type": "aggregation_count",
+      "sql": "SELECT COUNT(DISTINCT <SITE_ID>) FROM ran_2g_ran_2g;",
+      "status": "success",
+      "executable": false,
+      "error": "near \"<\": syntax error",
+      "error_type": "syntax"
+    },
+    {
+      "query": "Get maximum throughput from all sites",
+      "entities": [
+        {
+          "text": "throughput",
+          "label": "KPI_NAME",
+          "start": 12,
+          "end": 22
+        }
+      ],
+      "query_type": "aggregation_max",
+      "sql": "SELECT MAX(throughput) FROM ran_2g_ran_2g;",
+      "status": "success",
+      "executable": false,
+      "error": "no such column: throughput",
+      "error_type": "syntax"
+    },
+    {
+      "query": "Display RSRQ measurements for region West Java",
+      "entities": [
+        {
+          "text": "RSRQ",
+          "label": "LOCATION",
+          "start": 8,
+          "end": 12
+        },
+        {
+          "text": "Java",
+          "label": "KPI_NAME",
+          "start": 42,
+          "end": 46
+        }
+      ],
+      "query_type": "selection",
+      "sql": "SELECT Java FROM ran_2g_ran_2g WHERE id = '<SITE_ID>';",
+      "status": "success",
+      "executable": false,
+      "error": "no such column: Java",
+      "error_type": "syntax"
+    },
+    {
+      "query": "What is the minimum latency in Surabaya?",
+      "entities": [
+        {
+          "text": "latency",
+          "label": "KPI_NAME",
+          "start": 20,
+          "end": 27
+        }
+      ],
+      "query_type": "aggregation_min",
+      "sql": "SELECT MIN(latency) FROM ran_2g_ran_2g WHERE region = '<LOCATION>';",
+      "status": "success",
+      "executable": false,
+      "error": "no such column: latency",
+      "error_type": "syntax"
+    },
+    {
+      "query": "Show total call drops in Central Java",
+      "entities": [
+        {
+          "text": "Java",
+          "label": "KPI_NAME",
+          "start": 33,
+          "end": 37
+        }
+      ],
+      "query_type": "aggregation_sum",
+      "sql": "SELECT SUM(Java) FROM ran_2g_ran_2g WHERE kabupaten = '<LOCATION>';",
+      "status": "success",
+      "executable": false,
+      "error": "no such column: Java",
+      "error_type": "syntax"
+    },
+    {
+      "query": "List all sites with RSRP below -100",
+      "entities": [
+        {
+          "text": "RSRP",
+          "label": "LOCATION",
+          "start": 20,
+          "end": 24
+        },
+        {
+          "text": "-100",
+          "label": "KPI_NAME",
+          "start": 31,
+          "end": 35
+        }
+      ],
+      "query_type": "filtering",
+      "sql": "SELECT * FROM ran_2g_ran_2g WHERE -100 < <NUMERIC_VALUE>;",
+      "status": "success",
+      "executable": false,
+      "error": "near \"<\": syntax error",
+      "error_type": "syntax"
+    }
+  ],
+  "summary": {
+    "total_queries": 8,
+    "generation_successful": 8,
+    "generation_failed": 0,
+    "generation_rate": 100.0,
+    "executable": 0,
+    "syntax_errors": 8,
+    "runtime_errors": 0,
+    "executability_rate": 0.0
+  },
+  "tested_on": "2026-02-08 07:18:28"
+}

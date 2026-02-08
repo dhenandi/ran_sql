@@ -1,0 +1,113 @@
+{
+  "specificity": 0.95,
+  "total_tests": 20,
+  "correct": 19,
+  "false_positives": 1,
+  "results": [
+    {
+      "query": "What is the purpose of this database?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "How many tables are in the system?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Can you explain the structure?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Show me the schema information",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "What fields are available?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Give me the data table please",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Show me performance trends",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "I need to check the database",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Display the rate calculation method",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "What is the count of records?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "How do I query this database?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "What is the best way to analyze?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Can you help me understand the metrics?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Explain the difference between tables",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Which columns have numeric values?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "Show me all city names in the database",
+      "detected_entities": [
+        [
+          "city",
+          "KPI_NAME"
+        ]
+      ],
+      "correct": false
+    },
+    {
+      "query": "What regions are covered in the data?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "List all the site identifiers available",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "How many cells are in the network?",
+      "detected_entities": [],
+      "correct": true
+    },
+    {
+      "query": "When was this data last updated?",
+      "detected_entities": [],
+      "correct": true
+    }
+  ]
+}

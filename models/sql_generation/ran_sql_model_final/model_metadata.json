@@ -1,0 +1,18 @@
+{
+  "model_type": "template_based",
+  "training_samples": 720,
+  "query_types": {
+    "aggregation_max": 41,
+    "aggregation_min": 39,
+    "aggregation_sum": 37,
+    "aggregation_count": 37,
+    "aggregation_avg": 46,
+    "selection": 160,
+    "filtering": 160,
+    "grouping": 100,
+    "ordering": 100
+  },
+  "total_templates": 720,
+  "database_path": "/workspaces/ran_sql/data/databases/ran_performance.db",
+  "trained_on": "2026-02-08 07:17:14"
+}
